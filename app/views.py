@@ -45,3 +45,34 @@ def Addevent(request):
         form.save()        
     form1 = Eventform()      
     return render(request, 'addevent.html', {'form':form1})
+
+def SSE(request):
+    template_name = 'sse.html'
+    context = {}
+    context['empty'] = False
+
+    if request.method == 'POST':
+        start = request.POST.get('start')
+        end = request.POST.get('end')
+
+        startdate = datetime.strptime(start, '%d/%m/%Y').date()
+        enddate = datetime.strptime(end, '%d/%m/%Y').date()
+
+        if startdate > enddate:
+            context['error'] = "End Date should be after Start Date"
+
+        else:
+            context['data'] = {}
+            context['range'] = [startdate, enddate]
+            for e in Event.objects.all():
+                if e.date >= startdate and e.date <= enddate:
+                    event = (e.venue_name, e.venue_location, e.address, e.x_coordinate, e.y_coordinate, e.date)
+                    if event not in context['data']:
+                        context['data'][event] = []
+                    details = (e.infector, e.infected, e.case.case_num, e.description)
+                    context['data'][event].append(details)
+
+            if not context['data']:
+                context['empty'] = True
+        
+    return render(request, template_name, context)

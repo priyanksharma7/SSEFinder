@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <form method="POST">
+        {% csrf_token %}
+        <div class="row center-align">
+            <div class = "col s4">
+                <input type="text" name="start" class="datepicker" required>Start Date
+            </div>
+            <div class = "col s4">
+                <input type="text" name="end" class="datepicker" required>End Date
+            </div>
+            <div class = "col s4">
+                <button class="btn waves-effect waves-light" type="submit">Submit</button>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="container-fluid">
+    <div class="row center-align">
+        {% if range %}
+        <h5 style="color: red"><b>Potential SSEs </b>from {{ range.0 }} to {{ range.1 }}</h5>
+        {% endif %}
+    </div>
+    <table>
+        {% if error %}
+        <tr style="color: red">
+            <td>{{ error }}</td>
+        </tr>
+        {% elif empty == True %}
+        <tr style="color: red">
+            <td>No records found</td>
+        </tr>
+        {% elif data %}
+        <tr>
+            <th width="10%">Venue Name</th>
+            <th width="10%">Venue Location</th>
+            <th width="10%">Address</th>
+            <th width="10%">X Coordinate</th>
+            <th width="10%">Y Coordinate</th>
+            <th width="10%">Date of event</th>
+            <th width="40%">Case Numbers|
+                &emsp;&emsp;&emsp;&emsp;Status&emsp;&emsp;&emsp;&emsp;|
+                &emsp;&emsp;&emsp;&emsp;Description</th>
+        </tr>
+        {% for key, value in data.items %}
+        <tr>
+            <td>{{ key.0 }}</td>
+            <td>{{ key.1 }}</td>
+            <td>{{ key.2 }}</td>
+            <td>{{ key.3 }}</td>
+            <td>{{ key.4 }}</td>
+            <td>{{ key.5 }}</td>
+            <td>
+                <table>
+                    {% for items in value %}
+                    <tr>
+                        <td width="100px">{{ items.2 }}</td>
+                        {% if items.0 == True and items.1 == True%}
+                        <td width="150px">Possible Infector<br>Possibly Infected</td>
+                        {% elif items.0 == True %}
+                        <td>Possible Infector</td>
+                        {% elif items.1 == True %}
+                        <td>Possibly Infected</td>
+                        {% endif %}
+                        <td>{{ items.3|truncatechars_html:30 }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </td>
+        </tr>
+        {% endfor %}
+        {% endif %}
+    </table>
+</div>
+
+{% endblock %}

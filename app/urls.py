@@ -5,6 +5,7 @@ from .models import Case
 urlpatterns = [
     path('', Base, name='base'),
     path('case/', Showcase, name='addcase'),
-    path('event/', Showevent, name='showcase'),
-    path('addevent/', Addevent, name='addcase'),
+    path('event/', Showevent, name='showevent'),
+    path('addevent/', Addevent, name='addevent'),
+    path('list', SSE, name='sse-list'),
 ]
