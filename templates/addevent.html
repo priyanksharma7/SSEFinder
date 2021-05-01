@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>SSEFinder v1</title>
+  </head>
+
+  <body>
+    <form action="/addevent/" method="post">
+      {% csrf_token %}
+      <table>
+        {{ form.as_table }}
+      </table>      
+      <button type="submit" name="submit1">Submit and Add Another</button>
+    </form>
+    <form action="/">
+      <button type="submit" name="submit1">Homepage</button>
+    </form>
+    <a class="btn btn-primary" href="/">Home Page</a>
+  </body>
+</html>

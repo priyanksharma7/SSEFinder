@@ -1,5 +1,9 @@
 from django.db import models
 from datetime import timedelta
+import os
+import requests
+import json
+from urllib.parse import urljoin, urlencode
 
 # Create your models here.
 
@@ -30,6 +34,21 @@ class Event(models.Model):
         return self.venue_name
 
     def save(self, *args, **kwargs):
+        url = "https://geodata.gov.hk/gs/api/v1.0.0/locationSearch"
+
+        temp = str(self.venue_location)
+        query = "?q=" + temp.replace(" ","%20")
+        final_url = urljoin(url, query)
+        r = requests.get(url = final_url)
+        if r.status_code == 200:
+            data = r.json() 
+            data = data[0]
+            self.address = data['addressEN']  
+            self.x_coordinate =  float(data['x'])
+            self.y_coordinate =  float(data['y'])
+        else:
+            self.address = "-"  
+
         # Check for infector
         if self.date >= self.case.date_of_onset - timedelta(days=3) and self.date <= self.case.date_of_confirmation:
             self.infector = True
