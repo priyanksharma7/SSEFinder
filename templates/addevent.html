@@ -1,17 +1,12 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>SSEFinder v1</title>
-  </head>
+{% extends 'base.html' %}
 
-  <body>
-    <form action="/addevent/" method="post">
-      {% csrf_token %}
-      <table>
-        {{ form.as_table }}
-      </table>      
-      <button class="btn waves-effect waves-light" type="submit">Save and Add Another</button>
-    </form>
-    <a class="btn waves-effect waves-light" href="/">Homepage</a>
-  </body>
-</html>
+{% block content %}
+<form action="/addevent/" method="post">
+  {% csrf_token %}
+  <table>
+    {{ form.as_table }}
+  </table>
+  <button class="btn waves-effect waves-light" type="submit">Save and Add Another</button>
+</form>
+<a class="btn waves-effect waves-light" href="/">Homepage</a>
+{% endblock %}

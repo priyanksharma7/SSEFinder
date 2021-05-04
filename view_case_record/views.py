@@ -1,6 +1,6 @@
+from app.models import Case
 from django.shortcuts import render
 
-from ..app.models import Case
 from django import forms
 from django.shortcuts import get_object_or_404, redirect, render
 from django.db.models import Max, Min
@@ -10,6 +10,8 @@ from django.core.exceptions import ObjectDoesNotExist
 
 
 def index(request):
+    """Index page (details), showing lastest case
+    """
     try:
         # get lastest case id
         default_case_id = Case.objects.all.aggregate(Max('case_num')).pk
@@ -19,6 +21,8 @@ def index(request):
 
 
 def details(request, case_id):
+    """Details page, allowing users to search a particular user by case id
+    """
     if request.method == 'POST':
         form = CaseNumberForm(request.POST)
         if form.is_valid():
