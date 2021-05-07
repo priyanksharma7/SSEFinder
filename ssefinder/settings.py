@@ -14,6 +14,7 @@ import django_heroku
 from pathlib import Path
 
 from environs import Env
+
 env = Env()
 env.read_env()
 
@@ -29,6 +30,7 @@ SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
+# DEBUG = True
 
 ALLOWED_HOSTS = [
     'https://fast-falls-77962.herokuapp.com/', 'localhost', '127.0.0.1'
@@ -45,7 +47,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'view_case_record',
 ]
 
 MIDDLEWARE = [
