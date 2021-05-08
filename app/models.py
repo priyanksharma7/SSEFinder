@@ -43,10 +43,12 @@ class Event(models.Model):
         if r.status_code == 200:
             data = r.json() 
             data = data[0]
-            self.address = data['addressEN']  
+            self.address = data['addressEN']
             self.x_coordinate =  float(data['x'])
             self.y_coordinate =  float(data['y'])
         else:
+            self.x_coordinate =  0.0
+            self.y_coordinate =  0.0
             self.address = "-"  
 
         # Check for infector

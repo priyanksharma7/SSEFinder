@@ -25,17 +25,6 @@
     background-color: white;
   }
 
-  .input-field2 {
-    width: 100%;
-    padding: 12px 20px;
-    margin: 8px 0;
-    display: inline-block;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
-    background-color: white;
-  }
-
   .errorlist{
     color: red;
   }
@@ -47,59 +36,43 @@
   {% endfor %}
 </div>
 
-
 <div class="container">
-  <form action = '/event/' method="post">
+  <form action="/addevent/" method="post">
     {% csrf_token %}
+    <p style="font-size:32px">Add Event for : {{case}}</p>
     <div class="row">
       <div class="col s3">
-        <h6>Case Number</h6>
+        <h6>Venue Name</h6>
       </div>
       <div class="input-field col s9">
-        {{ form.case_num }}
+        {{ form.venue_name }}
       </div>
     </div>
     <div class="row">
       <div class="col s3">
-        <h6>Patient Name</h6>
+        <h6>Venue Location</h6>
       </div>
       <div class="input-field col s9">
-        {{ form.patient_name }}
+        {{ form.venue_location }}
       </div>
     </div>
     <div class="row">
       <div class="col s3">
-        <h6>Identification Document Number</h6>
+        <h6>Venue Name</h6>
       </div>
       <div class="input-field col s9">
-        {{ form.id_num }}
+        {{ form.date }}
       </div>
-    </div>
+    </div>  
     <div class="row">
       <div class="col s3">
-        <h6>Date of Birth</h6>
+        <h6>Venue Name</h6>
       </div>
       <div class="input-field col s9">
-        {{ form.date_of_birth }}
+        {{ form.description }}
       </div>
-    </div>
-    <div class="row">
-      <div class="col s3">
-        <h6>Date of Symptom Onset</h6>
-      </div>
-      <div class="input-field col s9">
-        {{ form.date_of_onset }}
-      </div>
-    </div>
-    <div class="row">
-      <div class="col s3">
-        <h6>Date of Confirmation after Testing</h6>
-      </div>
-      <div class="input-field col s9" >
-        {{ form.date_of_confirmation }}
-      </div>
-    </div>
-    <button class="btn waves-effect waves-light" type="submit">Submit</button>
+    </div>    
+    <button class="btn waves-effect waves-light" type="submit">Save and Add Another</button>
   </form>
 </div>
 {% endblock %}

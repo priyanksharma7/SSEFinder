@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+  <form method="post">
+      {% csrf_token %}
+      <input type="text" name="sCasenum" placeholder="Enter Case Number">
+      <br>
+      <br>
+      <button class="btn waves-effect waves-light" type="submit">SEARCH CASE</button> 
+  </form>
+  {% if casedeets %}
+    <p style="font-size:32px">Case Details :</p>
+    <table>
+        <tr>
+            <th>Case Number</th>
+            <th>Patient Name</th>
+            <th>Identity Document Number</th>
+            <th>Date of Birth</th>
+            <th>Date of Onset</th>
+            <th>Date of Confimration</th>
+        </tr>
+        <tr>
+            <td>{{casedeets.case_num}}</td>
+            <td>{{casedeets.patient_name}}</td>
+            <td>{{casedeets.id_num}}</td>
+            <td>{{casedeets.date_of_birth}}</td>
+            <td>{{casedeets.date_of_onset}}</td>
+            <td>{{casedeets.date_of_confirmation}}</td>
+        </tr>
+    </table>
+    <p style="font-size:32px">Events : </p>
+
+    <table>
+        <tr>
+            <th width="10%">Venue Name</th>
+            <th width="10%">Venue Location</th>
+            <th width="25%">Address</th>
+            <th width="10%">X Coord</th>
+            <th width="10%">Y Coord</th>
+            <th width="13%">Date of Event</th>
+            <th width="22%">Description</th>
+        </tr>
+        {% for events in eList %}
+            <tr>
+                <td>{{events.venue_name }}</td>
+                <td>{{events.venue_location}}</td>
+                <td>{{events.address}}</td>
+                <td>{{events.x_coordinate}}</td>
+                <td>{{events.y_coordinate}}</td>
+                <td>{{events.date}}</td>
+                <td>{{events.description}}</td>
+            </tr>
+        {% endfor %}
+    </table>
+    {% endif %}
+    {% if dne == True %}
+        <p style="font-size:32px">There is No Case Record With Case Number: {{num}} </p>
+    {% elif valErr == True %}
+        <p style="font-size:32px">Value Error: "{{num}}" is not an Integer, Please Enter Integers Only</p>
+    {% endif %}
+    <br>
+    <a class="btn waves-effect waves-light" href="/">Homepage</a>
+</div>
+{% endblock %}

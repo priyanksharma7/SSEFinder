@@ -15,4 +15,4 @@ class Eventform(ModelForm):
     class Meta:     
         widgets = {'date': DateInput()}   
         model = Event        
-        fields = ['case', 'venue_name', 'venue_location', 'date', 'description']
+        fields = ['venue_name', 'venue_location', 'date', 'description']

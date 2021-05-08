@@ -1,12 +1,75 @@
-{% comment %} {% extends 'base.html' %} {% endcomment %}
+{% extends 'base.html' %}
 
 {% block content %}
-<form action="/addevent/" method="post">
-  {% csrf_token %}
-  <table>
-    {{ form.as_table }}
-  </table>
-  <button class="btn waves-effect waves-light" type="submit">Save and Add Another</button>
-</form>
-<a class="btn waves-effect waves-light" href="/">Homepage</a>
+
+<style>
+  .container {
+    border-radius: 5px;
+    background-color: #f2f2f2;
+    padding: 20px;
+    margin-top: 10px;
+  }
+
+  .col.s3 {
+    padding-top: 10px;
+  }
+
+  .input-field {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    background-color: white;
+  }
+
+  .errorlist{
+    color: red;
+  }
+</style>
+
+
+<div class="container">
+  <form action="/addevent/" method="post">
+    {% csrf_token %}
+    <p style="font-size:32px">Add Event for : {{case}}</p>
+    <div class="row">
+      <div class="col s3">
+        <h6>Venue Name</h6>
+      </div>
+      <div class="input-field col s9">
+        {{ form.venue_name }}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col s3">
+        <h6>Venue Location</h6>
+      </div>
+      <div class="input-field col s9">
+        {{ form.venue_location }}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col s3">
+        <h6>Date of Event</h6>
+      </div>
+      <div class="input-field col s9">
+        {{ form.date }}
+      </div>
+    </div>  
+    <div class="row">
+      <div class="col s3">
+        <h6>Description</h6>
+      </div>
+      <div class="input-field col s9">
+        {{ form.description }}
+      </div>
+    </div>    
+    <button class="btn waves-effect waves-light" type="submit">Save and Add Another</button>
+  </form>
+  <br>
+  <a class="btn waves-effect waves-light" href="/">Homepage</a>
+</div>
 {% endblock %}
