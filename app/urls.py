@@ -3,7 +3,7 @@ from .views import *
 from .models import Case
 
 urlpatterns = [
-    path('', Base, name='base'),
+    path('', Home, name='home'),
     path('case/', Showcase, name='addcase'),
     path('event/', Showevent, name='showevent'),
     path('addevent/', Addevent, name='addevent'),

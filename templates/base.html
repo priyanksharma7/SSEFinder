@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>SSEFinder v1</title>
+    <title>SSEFinder - Group C</title>
     <!--Import Google Icon Font-->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <!--Import materialize.css-->
@@ -11,6 +11,41 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
     <style>
+      .css {
+        border-radius: 5px;
+        background-color: #f2f2f2;
+        padding: 20px;
+        margin-top: 10px;
+      }
+
+      .col.s3 {
+        padding-top: 10px;
+      }
+
+      .input-field {
+        width: 100%;
+        padding: 12px 20px;
+        margin: 8px 0;
+        display: inline-block;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+        background-color: white;
+      }
+
+      div.col.s12{
+        padding: 10px;
+      }
+
+      .btn-large{
+        width: 500px;
+        font-size: 20px;
+      }
+
+      .errorlist{
+        color: red;
+      }
+
       table {
       font-family: Arial, Helvetica, sans-serif;
       border-collapse: collapse;
@@ -37,19 +72,18 @@
   <body>
     <nav>
         <div class="nav-wrapper">
-            <a class="brand-logo center">{% block title %}SSEFinder - Group C{% endblock %}</a>
+            <a class="brand-logo center" href="{% url 'home' %}">{% block title %}SSEFinder{% endblock %}</a>
+            {% if user.is_authenticated %}
+            <div class="right-align">
+              <a class="btn waves-effect waves-light grey" href="{% url 'logout' %}">LOGOUT<i class="material-icons right">account_circle</i></a>
+            </div>
+            {% endif %}
         </div>
     </nav>
-    <div class="row center-align" style="padding-top: 10px;">
-      <div class="col s4">
-        <a class="btn waves-effect waves-light" href="{% url 'addcase' %}">Create Case</a>
-      </div>
-      <div class="col s4">
-        <a class="btn waves-effect waves-light" href="{% url 'sse-list' %}">Potential SSEs</a>
-      </div>
-      <div class="col s4">
-        <a class="btn waves-effect waves-light" href="{% url 'searchcase' %}">Search Case</a>
-      </div>
+    <div class = "center-align">
+      {% for field in form %}
+        {{ field.errors }}
+      {% endfor %}
     </div>
     {% block content %}
     {% endblock %}

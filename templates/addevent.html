@@ -1,40 +1,10 @@
 {% extends 'base.html' %}
 
 {% block content %}
-
-<style>
-  .container {
-    border-radius: 5px;
-    background-color: #f2f2f2;
-    padding: 20px;
-    margin-top: 10px;
-  }
-
-  .col.s3 {
-    padding-top: 10px;
-  }
-
-  .input-field {
-    width: 100%;
-    padding: 12px 20px;
-    margin: 8px 0;
-    display: inline-block;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
-    background-color: white;
-  }
-
-  .errorlist{
-    color: red;
-  }
-</style>
-
-
-<div class="container">
+<div class="css container">
   <form action="/addevent/" method="post">
     {% csrf_token %}
-    <p style="font-size:32px">Add Event for : {{case}}</p>
+    <h5">Add Event for : {{case}}</h5>
     <div class="row">
       <div class="col s3">
         <h6>Venue Name</h6>
@@ -70,6 +40,6 @@
     <button class="btn waves-effect waves-light" type="submit">Save and Add Another</button>
   </form>
   <br>
-  <a class="btn waves-effect waves-light" href="/">Homepage</a>
+  <a class="btn waves-effect waves-light" href="{% url 'home' %}">Homepage</a>
 </div>
 {% endblock %}

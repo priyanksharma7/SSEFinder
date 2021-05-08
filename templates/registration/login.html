@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block title %}Log In{% endblock %}
+
+{% block content %}
+<div class="css container">
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button class="btn waves-effect waves-light" type="submit" name="action">Submit<i class="material-icons right">send</i></button>
+  </form>
+</div>
+{% endblock %}

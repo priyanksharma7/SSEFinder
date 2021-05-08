@@ -4,10 +4,14 @@
 <div class="container">
   <form method="post">
       {% csrf_token %}
-      <input type="text" name="sCasenum" placeholder="Enter Case Number">
-      <br>
-      <br>
-      <button class="btn waves-effect waves-light" type="submit">SEARCH CASE</button> 
+      <div class="row center-align" style="margin: 20px" >
+        <div class = "col s10">
+            <input type="text" name="sCasenum" placeholder="Enter Case Number">
+        </div>
+        <div class = "col s2">
+            <button class="btn waves-effect waves-light" type="submit">SEARCH CASE</button>
+        </div>
+      </div>
   </form>
   {% if casedeets %}
     <p style="font-size:32px">Case Details :</p>
@@ -57,9 +61,7 @@
     {% if dne == True %}
         <p style="font-size:32px">There is No Case Record With Case Number: {{num}} </p>
     {% elif valErr == True %}
-        <p style="font-size:32px">Value Error: "{{num}}" is not an Integer, Please Enter Integers Only</p>
+        <p style="font-size:32px">Value Error: "{{num}}" is not an number. Please enter a valid case number.</p>
     {% endif %}
-    <br>
-    <a class="btn waves-effect waves-light" href="/">Homepage</a>
 </div>
 {% endblock %}

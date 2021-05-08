@@ -1,11 +1,30 @@
 from django.db import models
 from datetime import timedelta
-import os
+from django.contrib.auth.models import User
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 import requests
 import json
-from urllib.parse import urljoin, urlencode
+from urllib.parse import urljoin
 
 # Create your models here.
+
+class CHPuser(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    staff_number = models.CharField(max_length=6)
+
+    class Meta:
+        verbose_name = "CHP User"
+        verbose_name_plural = "CHP Users"
+
+    def __str__(self):
+        return self.user.username
+
+    @receiver(post_save, sender=User)
+    def create_or_update_user_profile(sender, instance, created, **kwargs):
+        if created:
+            CHPuser.objects.create(user=instance)
+        instance.chpuser.save()
 
 class Case(models.Model):
     case_num = models.PositiveIntegerField(unique=True)

@@ -1,21 +1,22 @@
 from django.shortcuts import render
 from .forms import Caseform, Eventform
-from django.http import HttpResponse, HttpResponseRedirect
 from .models import Case, Event
-from datetime import datetime, timedelta, date
+from datetime import datetime, timedelta
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
-def Base(request):
-    template_name = 'base.html'
-
+@login_required
+def Home(request):
+    template_name = 'home.html'
     return render(request, template_name)
 
+@login_required
 def Showcase(request):
     form = Caseform()
-
     return render(request, 'addcase.html', {'form':form})
 
+@login_required
 def Showevent(request):
     #This function first stores the Case data and 
     #then renders the add event form
@@ -30,6 +31,7 @@ def Showevent(request):
     context['form'] = form1
     return render(request, 'addfirstevent.html', context)
 
+@login_required
 def Addevent(request):
     #This function first stores the previously entered even 
     #and then renders the add event form again.
@@ -41,15 +43,16 @@ def Addevent(request):
         if e_date < min_date :
             return render(request, 'dateerror.html', {'errormessage':"The date of Event is before the 14th day, Do not add this event or change date"})
         
-        if e_date > max_date :
+        elif e_date > max_date :
             return render(request, 'dateerror.html', {'errormessage':"The date of Event is after the date of confirmation, Do   not add this event or change date"})
 
-        dForm = Event(case=wCase, venue_name=form.cleaned_data['venue_name'], venue_location=form.cleaned_data['venue_location'], date=form.cleaned_data['date'], description=form.cleaned_data['description'])
-        dForm.save()
-        print(dForm)    
+        else:
+            dForm = Event(case=wCase, venue_name=form.cleaned_data['venue_name'], venue_location=form.cleaned_data['venue_location'], date=form.cleaned_data['date'], description=form.cleaned_data['description'])
+            dForm.save()   
     form1 = Eventform()      
     return render(request, 'addevent.html', {'form':form1, 'case':wCase.patient_name})
 
+@login_required
 def SearchCase(request):
     context={}
     if request.method == 'POST':        
@@ -69,8 +72,7 @@ def SearchCase(request):
         context['eList'] = dCase.event_set.all()
     return render(request, 'search.html', context)
 
-        
-
+@login_required
 def SSE(request):
     template_name = 'sse.html'
     context = {}
@@ -91,7 +93,7 @@ def SSE(request):
             context['range'] = [startdate, enddate]
             for e in Event.objects.all():
                 if e.date >= startdate and e.date <= enddate:
-                    event = (e.venue_name, e.venue_location, e.address, e.x_coordinate, e.y_coordinate, e.date)
+                    event = (e.date, e.venue_name, e.venue_location, e.address, e.x_coordinate, e.y_coordinate)
                     if event not in context['data']:
                         context['data'][event] = []
                     details = (e.infector, e.infected, e.case.case_num, e.description)
