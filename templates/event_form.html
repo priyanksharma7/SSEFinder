@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="center-align">
+    <h4>Add Social Events</h4>
+</div>
+<div class="css container">
+    <form method="post">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col s3">
+                <h6>Patient Name</h6>
+            </div>
+            <div class="input-field col s9">
+                {{ case }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col s3">
+                <h6>Venue Name</h6>
+            </div>
+            <div class="input-field col s9">
+                {{ form.venue_name }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col s3">
+                <h6>Venue Location</h6>
+            </div>
+            <div class="input-field col s9">
+                {{ form.venue_location }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col s3">
+                <h6>Date of Event</h6>
+            </div>
+            <div class="input-field col s9">
+                {{ form.date }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col s3">
+                <h6>Description</h6>
+            </div>
+            <div class="input-field col s9">
+                {{ form.description }}
+            </div>
+        </div>
+        <div class="row center-align">
+            <div class="col s6">
+                <button class="btn waves-effect waves-light" name="save" type="submit">Save and Add Another</button>
+            </div>
+            <div class="col s6">
+                <button class="btn waves-effect waves-light" name="exit" type="submit">Save and Exit</button>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}

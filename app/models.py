@@ -1,11 +1,7 @@
 from django.db import models
-from datetime import timedelta
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-import requests
-import json
-from urllib.parse import urljoin
 
 # Create your models here.
 
@@ -51,29 +47,3 @@ class Event(models.Model):
 
     def __str__(self):
         return self.venue_name
-
-    def save(self, *args, **kwargs):
-        url = "https://geodata.gov.hk/gs/api/v1.0.0/locationSearch"
-
-        temp = str(self.venue_location)
-        query = "?q=" + temp.replace(" ","%20")
-        final_url = urljoin(url, query)
-        r = requests.get(url = final_url)
-        if r.status_code == 200:
-            data = r.json() 
-            data = data[0]
-            self.address = data['addressEN']
-            self.x_coordinate =  float(data['x'])
-            self.y_coordinate =  float(data['y'])
-        else:
-            self.x_coordinate =  0.0
-            self.y_coordinate =  0.0
-            self.address = "-"  
-
-        # Check for infector
-        if self.date >= self.case.date_of_onset - timedelta(days=3) and self.date <= self.case.date_of_confirmation:
-            self.infector = True
-        # Check for infected
-        if self.case.date_of_onset >= self.date + timedelta(days=2) and self.case.date_of_onset <= self.date + timedelta(days=14):
-            self.infected = True
-        super(Event, self).save(*args, **kwargs)

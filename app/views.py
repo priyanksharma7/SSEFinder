@@ -1,6 +1,9 @@
-from django.shortcuts import render
-from .forms import Caseform, Eventform
+from django.shortcuts import render, redirect
 from .models import Case, Event
+from .forms import CaseForm, EventForm
+import requests
+import json
+from urllib.parse import urljoin
 from datetime import datetime, timedelta
 from django.contrib.auth.decorators import login_required
 
@@ -12,45 +15,70 @@ def Home(request):
     return render(request, template_name)
 
 @login_required
-def Showcase(request):
-    form = Caseform()
-    return render(request, 'addcase.html', {'form':form})
-
-@login_required
-def Showevent(request):
-    #This function first stores the Case data and 
-    #then renders the add event form
-    global wCase
-    context = {}
+def case_create(request):
     if request.method == 'POST':
-        form = Caseform(request.POST)       
+        form = CaseForm(request.POST)
         if form.is_valid():
-            wCase = form.save()              
-    form1 = Eventform() 
-    context['case']=wCase.patient_name 
-    context['form'] = form1
-    return render(request, 'addfirstevent.html', context)
+            case = form.save(commit=False)
+            if case.date_of_onset > case.date_of_confirmation:
+                form.add_error('date_of_onset', "Date of Onset should not be after Date of Confirmation")
+            else:
+                form.save()
+                request.session['case'] = form.cleaned_data['case_num']
+                return redirect('event-create')
+    else:
+        form = CaseForm()
+    return render(request, 'case_form.html', {'form': form})
 
 @login_required
-def Addevent(request):
-    #This function first stores the previously entered even 
-    #and then renders the add event form again.
-    form = Eventform(request.POST)       
-    if form.is_valid():
-        min_date = wCase.date_of_onset - timedelta(14)
-        max_date = wCase.date_of_confirmation 
-        e_date = datetime.strptime(form.data['date'], '%Y-%m-%d').date()
-        if e_date < min_date :
-            return render(request, 'dateerror.html', {'errormessage':"The date of Event is before the 14th day, Do not add this event or change date"})
-        
-        elif e_date > max_date :
-            return render(request, 'dateerror.html', {'errormessage':"The date of Event is after the date of confirmation, Do   not add this event or change date"})
+def event_create(request):
+    casedata = Case.objects.get(case_num = request.session['case'])
+    if request.method == 'POST':
+        redirect_url = 'home'
+        if 'save' in request.POST:
+            redirect_url = 'event-create'
+        form = EventForm(request.POST)
+        if form.is_valid():
+            event = form.save(commit=False)
+            event.case = casedata
+            event_function(event)
+            
+            if event.date >= event.case.date_of_onset - timedelta(14) and event.date <= event.case.date_of_confirmation:
+                event.save()
+                return redirect(redirect_url)
+            else:
+                form.add_error('date', "Date of event should be 14 days before the onset of symptoms up to and including the day of confirmation of infection")
+    
+    else:
+        form = EventForm()
+    return render(request, 'event_form.html', {'form': form, 'case': casedata})
 
-        else:
-            dForm = Event(case=wCase, venue_name=form.cleaned_data['venue_name'], venue_location=form.cleaned_data['venue_location'], date=form.cleaned_data['date'], description=form.cleaned_data['description'])
-            dForm.save()   
-    form1 = Eventform()      
-    return render(request, 'addevent.html', {'form':form1, 'case':wCase.patient_name})
+# Helper function
+def event_function(event):
+    # Location API
+    url = "https://geodata.gov.hk/gs/api/v1.0.0/locationSearch"
+
+    temp = str(event.venue_location)
+    query = "?q=" + temp.replace(" ","%20")
+    final_url = urljoin(url, query)
+    r = requests.get(url = final_url)
+    if r.status_code == 200:
+        data = r.json()
+        data = data[0]
+        event.address = data['addressEN']
+        event.x_coordinate =  float(data['x'])
+        event.y_coordinate =  float(data['y'])
+    else:
+        event.x_coordinate =  0.0
+        event.y_coordinate =  0.0
+        event.address = "-"
+
+    # Check for infector
+    if event.date >= event.case.date_of_onset - timedelta(days=3) and event.date <= event.case.date_of_confirmation:
+        event.infector = True
+    # Check for infected
+    if event.case.date_of_onset >= event.date + timedelta(days=2) and event.case.date_of_onset <= event.date + timedelta(days=14):
+        event.infected = True
 
 @login_required
 def SearchCase(request):
@@ -82,11 +110,11 @@ def SSE(request):
         start = request.POST.get('start')
         end = request.POST.get('end')
 
-        startdate = datetime.strptime(start, '%d/%m/%Y').date()
-        enddate = datetime.strptime(end, '%d/%m/%Y').date()
+        startdate = datetime.strptime(start, '%Y-%m-%d').date()
+        enddate = datetime.strptime(end, '%Y-%m-%d').date()
 
         if startdate > enddate:
-            context['error'] = "End Date should be after Start Date"
+            context['error'] = "Error: Start Date should be before End Date"
 
         else:
             context['data'] = {}

@@ -4,9 +4,8 @@ from .models import Case
 
 urlpatterns = [
     path('', Home, name='home'),
-    path('case/', Showcase, name='addcase'),
-    path('event/', Showevent, name='showevent'),
-    path('addevent/', Addevent, name='addevent'),
+    path('createcase/', case_create, name='case-create'),
+    path('createevent/', event_create, name='event-create'),
+    path('search', SearchCase, name='search-case'),
     path('list', SSE, name='sse-list'),
-    path('search', SearchCase, name='searchcase'),
 ]

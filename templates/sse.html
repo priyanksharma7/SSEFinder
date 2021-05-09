@@ -12,7 +12,7 @@
                 <input type="text" name="end" class="datepicker" required>End Date
             </div>
             <div class = "col s4">
-                <button class="btn waves-effect waves-light" style="margin: 20px" type="submit">Submit</button>
+                <button class="waves-effect waves-light btn " style="margin: 20px" type="submit">Submit<i class="material-icons right">search</i></button>
             </div>
         </div>
     </form>
@@ -40,10 +40,10 @@
                     &emsp;&emsp;&emsp;&emsp;Description</th>
             </tr>
             {% for key, value in data.items %}
-            {% if value|length > 2 %}
-            <tr style="background-color: rgb(165, 7, 7)">
+            {% if value|length > 6 %}
+            <tr style="background-color: rgb(216, 83, 83)">
             {% else %}
-            <tr style="background-color: rgb(160, 145, 145)">
+            <tr style="background-color: rgb(219, 202, 202)">
                 {% endif %}
                 <td>{{ key.0 }}</td>
                 <td>{{ key.1 }}</td>
