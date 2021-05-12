@@ -6,6 +6,7 @@ import json
 from urllib.parse import urljoin
 from datetime import datetime, timedelta
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
 # Create your views here.
 
@@ -25,6 +26,7 @@ def case_create(request):
             else:
                 form.save()
                 request.session['case'] = form.cleaned_data['case_num']
+                messages.success(request, 'Case Record was saved successfully!')
                 return redirect('event-create')
     else:
         form = CaseForm()
@@ -45,6 +47,7 @@ def event_create(request):
             
             if event.date >= event.case.date_of_onset - timedelta(14) and event.date <= event.case.date_of_confirmation:
                 event.save()
+                messages.success(request, 'Social Event was saved successfully!')
                 return redirect(redirect_url)
             else:
                 form.add_error('date', "Date of event should be 14 days before the onset of symptoms up to and including the day of confirmation of infection")
